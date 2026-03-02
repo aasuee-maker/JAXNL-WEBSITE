@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Designer, Builder, Shopper (Glass Edition)</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --glass-shadow: rgba(0, 0, 0, 0.1);
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a68;
+    --text-tertiary: rgba(26, 26, 46, 0.6);
+    --accent-primary: #667eea;
+    --accent-secondary: #764ba2;
+    --accent-light: #a8b5ff;
+    --bg-gradient-1: #667eea;
+    --bg-gradient-2: #764ba2;
+    --bg-gradient-3: #f093fb;
+    --bg-gradient-4: #4facfe;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 100%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+    min-height: 100vh;
+  }
+
+  /* Background animated gradient overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(240, 147, 251, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 40% 20%, rgba(79, 172, 254, 0.2) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: gradientShift 20s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+  }
+  .cursor.grow {
+    width: 40px; height: 40px;
+    background: transparent;
+    border: 2px solid var(--accent-primary);
+    box-shadow: 0 0 30px rgba(102, 126, 234, 0.4);
+  }
+
+  /* Glass morphism base class */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .nav-links {
+    display: flex; gap: 2.5rem; list-style: none;
+  }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .nav-links a:hover {
+    opacity: 1;
+    color: var(--accent-primary);
+  }
+
+  /* SECTION BASE */
+  section {
+    padding: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    padding: 10rem 3rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-eyebrow {
+    grid-column: 1 / -1;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-headline {
+    grid-column: 1 / -1;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
+    line-height: 1.0;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: white;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.4s;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub-grid {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 4rem;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.7s;
+  }
+
+  .hero-descriptor {
+    font-size: 1.15rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 34ch;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .hero-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    justify-content: flex-start;
+    padding-top: 0.2rem;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    padding: 0.8rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+  }
+  .pill:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateX(8px);
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+  }
+  .pill::before {
+    content: '';
+    display: block;
+    width: 6px; height: 6px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px var(--accent-primary);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem; left: 3rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 1.2s;
+  }
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 48px; height: 1px;
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .hero-big-number {
+    position: absolute;
+    bottom: -1rem; right: -0.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(12rem, 25vw, 22rem);
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.15);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+    animation: fadeIn 1.2s ease forwards 0.9s;
+  }
+
+  /* ── ABOUT ── */
+  .about {
+    color: white;
+    padding: 7rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 6rem;
+    align-items: start;
+    position: relative;
+    overflow: hidden;
+    margin: 3rem;
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .about::before {
+    content: 'ABOUT';
+    position: absolute;
+    top: 2.5rem; right: 3rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .about-label {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: white;
+  }
+  .about-label em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--accent-light), var(--accent-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .about-traits {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 2.5rem;
+  }
+  .trait {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.8rem 1.2rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+  .trait:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(8px);
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+  }
+  .trait span {
+    color: var(--accent-light);
+    font-size: 0.8rem;
+  }
+
+  .about-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .about-body p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .about-body p strong {
+    color: white;
+    font-weight: 500;
+  }
+
+  .about-highlight {
+    margin-top: 1rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+  .about-highlight p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--accent-light) !important;
+  }
+
+  /* ── PROJECTS ── */
+  .projects {
+    padding: 7rem 3rem;
+    position: relative;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .project-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 2.5rem;
+    align-items: start;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: default;
+    position: relative;
+  }
+
+  .project-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  }
+
+  .project-item:hover .project-num { color: var(--accent-primary); }
+  .project-item:hover .project-expand { opacity: 1; transform: translateX(0); }
+
+  .project-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.6);
+    padding-top: 0.4rem;
+    transition: color 0.2s;
+  }
+
+  .project-content { }
+
+  .project-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .project-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+    line-height: 1.15;
+    color: white;
+  }
+
+  .project-desc {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 52ch;
+  }
+
+  .project-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .stat-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent-light), var(--accent-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .project-expand {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-primary);
+    writing-mode: vertical-rl;
+    opacity: 0;
+    transform: translateX(8px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+
+  /* ── AI THESIS ── */
+  .thesis {
+    color: white;
+    padding: 7rem 3rem;
+    position: relative;
+    overflow: hidden;
+    margin: 3rem;
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .thesis::after {
+    content: '"';
+    position: absolute;
+    top: -2rem; left: 2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 30rem;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .thesis-inner {
+    max-width: 900px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .thesis-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 2.5rem;
+  }
+
+  .thesis-statement {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: white;
+    margin-bottom: 4rem;
+  }
+  .thesis-statement strong {
+    font-weight: 700;
+    font-style: normal;
+    background: linear-gradient(135deg, #a8d5ba, #d4fc79);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .thesis-principles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .principle {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+  }
+  .principle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+  .principle-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #d4fc79;
+    margin-bottom: 0.5rem;
+  }
+  .principle-desc {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .thesis-wedge {
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-left: 3px solid #d4fc79;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+  .thesis-wedge-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #d4fc79;
+    margin-bottom: 0.75rem;
+  }
+  .thesis-wedge p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* ── SIDE PROJECTS ── */
+  .side-projects {
+    padding: 7rem 3rem;
+  }
+
+  .side-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .side-card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2.5rem;
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+  .side-card:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  }
+  .side-card:hover .side-card-emoji { transform: scale(1.15) rotate(-5deg); }
+
+  .side-card-emoji {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+  }
+
+  .side-card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+    color: white;
+  }
+
+  .side-card-desc {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 1.25rem;
+  }
+
+  .side-card-why {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    line-height: 1.5;
+  }
+
+  .side-card-corner {
+    position: absolute;
+    bottom: 1.5rem; right: 1.5rem;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    transition: all 0.3s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  .side-card:hover .side-card-corner { opacity: 1; }
+
+  /* ── CONTACT ── */
+  .contact {
+    padding: 7rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    margin: 3rem;
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .contact-left {}
+
+  .contact-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900;
+    color: white;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+  }
+  .contact-headline em {
+    font-style: italic;
+    background: linear-gradient(135deg, var(--accent-light), var(--accent-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .contact-body {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 38ch;
+  }
+
+  .contact-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .contact-detail {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    transition: all 0.3s ease;
+  }
+  .contact-detail:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(8px);
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
+  }
+
+  .contact-detail-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .contact-detail-val {
+    font-size: 1.05rem;
+    color: white;
+    font-weight: 400;
+  }
+
+  .contact-cta {
+    margin-top: 1rem;
+    padding: 1.2rem 2.5rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: white;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 50px;
+    cursor: none;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  }
+  .contact-cta:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 3rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 0.15; }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.5rem; }
+    .hero { padding: 6rem 1.5rem 3rem; grid-template-columns: 1fr; }
+    .hero-sub-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .about { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.5rem; margin: 1.5rem; }
+    .projects { padding: 4rem 1.5rem; }
+    .project-item { grid-template-columns: 50px 1fr; }
+    .project-expand { display: none; }
+    .thesis { padding: 4rem 1.5rem; margin: 1.5rem; }
+    .side-grid { grid-template-columns: 1fr; }
+    .side-projects { padding: 4rem 1.5rem; }
+    .contact { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; margin: 1.5rem; }
+    footer { padding: 1.5rem; flex-direction: column; gap: 0.75rem; text-align: center; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Portfolio · Glass Edition</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#thesis">Thesis</a></li>
+    <li><a href="#ideas">Ideas</a></li>
+    <li><a href="#contact">Say hi</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Designer · Builder · Shopper</p>
+
+  <h1 class="hero-headline">
+    I turn<br>
+    messy <em>problems</em><br>
+    into things<br>
+    people <em>trust.</em>
+  </h1>
+
+  <div class="hero-sub-grid">
+    <p class="hero-descriptor">
+      I build for early-stage products — the zero-to-one moments and the
+      foundations that let teams move fast without breaking what matters most.
+      Right now I'm most excited about what AI can do for shopping.
+    </p>
+    <div class="hero-pills">
+      <div class="pill">Zero to one & one to scale</div>
+      <div class="pill">Foundation frameworks & systems</div>
+      <div class="pill">Decision-ready flows</div>
+      <div class="pill">High bar for trust & clarity</div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">Scroll to explore</div>
+  <div class="hero-big-number">✦</div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div>
+    <h2 class="about-label">A shopper<br>to my <em>core.</em></h2>
+    <div class="about-traits">
+      <div class="trait"><span>★</span> Integrity</div>
+      <div class="trait"><span>★</span> Kindness</div>
+      <div class="trait"><span>★</span> Clarity</div>
+      <div class="trait"><span>★</span> Structure</div>
+      <div class="trait"><span>★</span> Perspective</div>
+    </div>
+  </div>
+
+  <div class="about-body reveal">
+    <p>
+      I'm the person in my family who handles everything — <strong>clothes for my husband, things for my baby, gifts for friends, and finds for myself.</strong> Shopping isn't just something I do. It's how I show love, solve problems, and balance indulgence with strategy.
+    </p>
+    <p>
+      I've spent almost five years at Walmart, most of that at Data Ventures building insights intelligence products from the ground up. What I keep returning to is how deeply I believe in what Walmart stands for: helping people save money, making smart choices accessible, and doing it the right way.
+    </p>
+    <p>
+      I'm energized by the ambiguity of building in AI. I find it exciting — not because of the novelty, but because the design problems are genuinely hard and the stakes are real.
+    </p>
+    <div class="about-highlight">
+      <p>"On nights when I have a lot of creative energy, I put on low-key 2000s music, write down every thought, then piece it together through sketching. That's how I make sense of complexity."</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="projects">
+  <div class="section-header reveal">
+    <h2 class="section-title">Selected Work</h2>
+    <span class="section-count">03 Projects</span>
+  </div>
+
+  <div class="project-list">
+
+    <div class="project-item reveal">
+      <div class="project-num">01</div>
+      <div class="project-content">
+        <div class="project-tag">Insights Intelligence · Founding Designer</div>
+        <h3 class="project-name">Customer Perception Platform</h3>
+        <p class="project-desc">
+          A supplier-facing platform for survey creation, real-time results, and internal review workflows — designed end-to-end from first principles. Built the scalable foundation that enabled faster research and more confident decision-making across the organization.
+        </p>
+        <div class="project-stats">
+          <div class="stat">
+            <span class="stat-val">150%</span>
+            <span class="stat-label">YoY Revenue Growth</span>
+          </div>
+          <div class="stat">
+            <span class="stat-val">30%</span>
+            <span class="stat-label">QoQ Adoption Increase</span>
+          </div>
+          <div class="stat">
+            <span class="stat-val">1,000s</span>
+            <span class="stat-label">Survey Projects Unlocked</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-expand">View</div>
+    </div>
+
+    <div class="project-item reveal reveal-delay-1">
+      <div class="project-num">02</div>
+      <div class="project-content">
+        <div class="project-tag">Product Testing · Multi-Persona System</div>
+        <h3 class="project-name">In-Home User Test Platform</h3>
+        <p class="project-desc">
+          An end-to-end product testing experience connecting four distinct personas: suppliers setting up tests, research experts reviewing submissions, customers completing surveys from home, and a print center managing logistics. Designed the integrated workflow and shaped core navigation across the entire system.
+        </p>
+      </div>
+      <div class="project-expand">View</div>
+    </div>
+
+    <div class="project-item reveal reveal-delay-2">
+      <div class="project-num">03</div>
+      <div class="project-content">
+        <div class="project-tag">Analytics · Design System Leadership</div>
+        <h3 class="project-name">Scintilla 2.0</h3>
+        <p class="project-desc">
+          Led the redesign of a multi-audience analytics platform into a scalable, standardized system — dashboards for suppliers, merchants, and third-party partners. Improved cross-product consistency, reduced maintenance overhead, and created a coherent analytics experience that unlocked a stronger value proposition.
+        </p>
+      </div>
+      <div class="project-expand">View</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- AI SHOPPING THESIS -->
+<section class="thesis" id="thesis">
+  <div class="thesis-inner">
+    <div class="thesis-eyebrow reveal">AI Shopping · Point of View</div>
+
+    <p class="thesis-statement reveal">
+      AI should solve <strong>decision fatigue</strong> — not just answer questions, but deliver accurate, personalized guidance that learns over time. The best AI shopping experience will feel subtle, not sci-fi. <strong>Grounded in trust, not novelty.</strong>
+    </p>
+
+    <div class="thesis-principles reveal">
+      <div class="principle">
+        <div class="principle-name">Trust</div>
+        <div class="principle-desc">Recommendations that feel earned, not arbitrary</div>
+      </div>
+      <div class="principle">
+        <div class="principle-name">Control</div>
+        <div class="principle-desc">The shopper is always driving</div>
+      </div>
+      <div class="principle">
+        <div class="principle-name">Transparency</div>
+        <div class="principle-desc">Show your reasoning, not just your answer</div>
+      </div>
+      <div class="principle">
+        <div class="principle-name">Personalization</div>
+        <div class="principle-desc">Context-aware, not one-size-fits-all</div>
+      </div>
+      <div class="principle">
+        <div class="principle-name">Usefulness</div>
+        <div class="principle-desc">Over novelty, every single time</div>
+      </div>
+      <div class="principle">
+        <div class="principle-name">Safety</div>
+        <div class="principle-desc">Especially when stakes are high</div>
+      </div>
+    </div>
+
+    <div class="thesis-wedge reveal">
+      <div class="thesis-wedge-label">The Wedge I'd Start With</div>
+      <p>Children's fashion — because attributes are structured, sizing decisions are painful, and parental preferences are strong. Build a system that understands the child's profile, parent preferences, seasonality, and budget. Then reuse that framework everywhere.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SIDE PROJECTS -->
+<section class="side-projects" id="ideas">
+  <div class="section-header reveal">
+    <h2 class="section-title">Ideas in the Wild</h2>
+    <span class="section-count">Product Thinking</span>
+  </div>
+
+  <div class="side-grid">
+
+    <div class="side-card reveal">
+      <span class="side-card-emoji">🐾</span>
+      <h3 class="side-card-name">Remember Bruce</h3>
+      <p class="side-card-desc">
+        A conversational experience that preserves a bond with a lost dog through a personalized narrative — as if your dog is still here, checking your messages for you.
+      </p>
+      <div class="side-card-why">Memory · Personalization · Emotional trust in AI</div>
+      <div class="side-card-corner">→</div>
+    </div>
+
+    <div class="side-card reveal reveal-delay-1">
+      <span class="side-card-emoji">📔</span>
+      <h3 class="side-card-name">Mom's Shopping Diary</h3>
+      <p class="side-card-desc">
+        A tool for parents to track evolving child needs by stage, manage replenishment, and cut decision fatigue through preferences and learning loops.
+      </p>
+      <div class="side-card-why">Stage-based change · Safety · Cognitive load</div>
+      <div class="side-card-corner">→</div>
+    </div>
+
+    <div class="side-card reveal reveal-delay-2">
+      <span class="side-card-emoji">🎰</span>
+      <h3 class="side-card-name">White Elephant Vending Machine</h3>
+      <p class="side-card-desc">
+        A playful gift exchange that mimics a 90s capsule toy machine — you don't see the gift until after you interact. Multiple gifts are pre-selected; you choose what to keep after the reveal.
+      </p>
+      <div class="side-card-why">Delight · Discovery · Gift commerce</div>
+      <div class="side-card-corner">→</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-left reveal">
+    <div class="contact-eyebrow">The Ask</div>
+    <h2 class="contact-headline">I want to build something shoppers can truly <em>trust.</em></h2>
+    <p class="contact-body">
+      I want to own a meaningful slice of the experience — from conversation and decision flows to the scalable design foundations that help a product ship faster without sacrificing quality.
+    </p>
+  </div>
+
+  <div class="contact-right reveal reveal-delay-1">
+    <div class="contact-detail">
+      <div class="contact-detail-label">Currently at</div>
+      <div class="contact-detail-val">Walmart Data Ventures — ~5 years</div>
+    </div>
+    <div class="contact-detail">
+      <div class="contact-detail-label">Interested in</div>
+      <div class="contact-detail-val">AI Shopping · Sparky Experience Team</div>
+    </div>
+    <div class="contact-detail">
+      <div class="contact-detail-label">Strengths</div>
+      <div class="contact-detail-val">Zero-to-one · Systems · Shopper instincts</div>
+    </div>
+    <button class="contact-cta">Let's talk →</button>
+  </div>
+</section>
+
+<footer>
+  <p>Built with intent, not templates. (Glass Edition)</p>
+  <p>Craft · Strategy · Vision · 2025</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .project-item, .side-card, .principle, .trait').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

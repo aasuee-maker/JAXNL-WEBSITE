@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Designer, Builder, Shopper (Modern Edition)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #FFFFFF;
+    --off-white: #FAFAFA;
+    --light-gray: #F5F5F5;
+    --black: #0A0A0A;
+    --gray: #666666;
+    --light-border: #E5E5E5;
+    --lime: #BFFF00;
+    --lime-dark: #9FDD00;
+    --lime-text: #5A8000; /* Accessible dark lime for text on light backgrounds */
+    --blue-link: #0066FF;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+    cursor: none;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--black);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.15s, height 0.15s, background 0.15s;
+  }
+  .cursor.grow {
+    width: 32px; height: 32px;
+    background: transparent;
+    border: 2px solid var(--lime);
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--light-border);
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+  }
+  nav.nav-hidden {
+    transform: translateY(-100%);
+  }
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--black);
+    font-weight: 500;
+  }
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.875rem;
+    letter-spacing: -0.01em;
+    color: var(--gray);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--black); }
+
+  /* SECTION BASE */
+  section { padding: 0; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    padding: 9rem 3rem 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    background: var(--off-white);
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.1s;
+  }
+
+  .hero-headline {
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 1.05;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--black);
+    max-width: 16ch;
+    margin: 0 auto 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.3s;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--lime-text);
+    font-weight: 900;
+  }
+
+  .hero-descriptor {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--gray);
+    max-width: 42ch;
+    margin: 0 auto 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.5s;
+  }
+
+  .highlight {
+    display: inline;
+    color: var(--black);
+    font-weight: 600;
+    background-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 10%,
+      rgba(191, 255, 0, 0.3) 10%,
+      rgba(191, 255, 0, 0.3) 90%,
+      transparent 90%
+    );
+    padding: 0.1em 0.3em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    border-radius: 0.2em;
+    white-space: nowrap;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    background: rgba(191, 255, 0, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: var(--black);
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: -0.01em;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 20px rgba(191, 255, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.7s;
+  }
+  .hero-cta:hover {
+    background: rgba(159, 221, 0, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(191, 255, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    max-width: 700px;
+    margin: 4rem auto 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.9s;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    letter-spacing: -0.01em;
+    color: var(--gray);
+    padding: 0.625rem 1.25rem;
+    background: var(--white);
+    border-radius: 50px;
+    border: 1px solid var(--light-border);
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  .pill:hover {
+    border-color: var(--black);
+    color: var(--black);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ── ABOUT ── */
+  .about {
+    padding: 8rem 3rem;
+    background: var(--black);
+  }
+
+  .about-container {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .about-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-top: 1rem;
+    color: var(--white);
+  }
+
+  .about-traits {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .trait {
+    font-size: 0.875rem;
+    letter-spacing: -0.01em;
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .trait:hover { color: var(--white); }
+  .trait span {
+    color: var(--lime);
+    font-size: 0.75rem;
+  }
+
+  /* ── PROJECTS ── */
+  .projects {
+    padding: 8rem 3rem;
+    background: var(--off-white);
+  }
+
+  .projects-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4rem;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+
+  .project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .project-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 3rem;
+    border: 1px solid var(--light-border);
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--black);
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--gray);
+    font-weight: 500;
+  }
+
+  .project-tag {
+    font-size: 0.8125rem;
+    letter-spacing: -0.01em;
+    color: var(--lime-text);
+    background: rgba(191, 255, 0, 0.1);
+    padding: 0.375rem 0.875rem;
+    border-radius: 50px;
+    font-weight: 600;
+  }
+
+  .project-name {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .project-time {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--gray);
+    opacity: 0.6;
+    letter-spacing: -0.01em;
+  }
+
+  .project-desc {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--gray);
+    margin-bottom: 1.5rem;
+  }
+
+  .project-themes {
+    display: flex;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-theme-tag {
+    font-size: 0.75rem;
+    letter-spacing: -0.01em;
+    color: var(--gray);
+    background: var(--light-gray);
+    padding: 0.375rem 0.75rem;
+    border-radius: 50px;
+    font-weight: 500;
+    border: 1px solid var(--light-border);
+  }
+
+  .project-image {
+    width: 100%;
+    margin: 2rem 0;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--light-gray);
+    border: 1px solid var(--light-border);
+    aspect-ratio: 16 / 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .project-image-placeholder {
+    color: var(--gray);
+    font-size: 0.875rem;
+    text-align: center;
+    opacity: 0.4;
+  }
+
+  /* Carousel styles */
+  .project-carousel {
+    width: 100%;
+    margin: 2rem 0;
+    position: relative;
+  }
+
+  .carousel-container {
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--light-gray);
+    border: 1px solid var(--light-border);
+    aspect-ratio: 16 / 10;
+    position: relative;
+  }
+
+  .carousel-slides {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+
+  .carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .carousel-slide.active {
+    opacity: 1;
+  }
+
+  .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--light-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+    pointer-events: auto;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .carousel-btn:hover {
+    background: white;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .carousel-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--black);
+    stroke-width: 2;
+    fill: none;
+  }
+
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--light-border);
+    cursor: none;
+    transition: all 0.3s ease;
+  }
+
+  .carousel-dot.active {
+    background: var(--lime-text);
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  .project-stats {
+    display: flex;
+    gap: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--light-border);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+  .stat-val {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--black);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .stat-label {
+    font-size: 0.75rem;
+    letter-spacing: -0.01em;
+    color: var(--gray);
+    font-weight: 500;
+  }
+
+  /* ── AI THESIS ── */
+  .thesis {
+    padding: 8rem 3rem;
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .thesis-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .thesis-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 2.5rem;
+  }
+
+  .thesis-statement {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    margin-bottom: 4rem;
+  }
+  .thesis-statement strong {
+    font-weight: 700;
+    color: var(--lime);
+  }
+
+  .thesis-principles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .principle {
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+  }
+  .principle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--lime);
+    transform: translateY(-4px);
+  }
+  .principle-name {
+    font-size: 0.875rem;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+    color: var(--lime);
+    margin-bottom: 0.5rem;
+  }
+  .principle-desc {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .thesis-wedge {
+    padding: 2.5rem;
+    background: var(--lime);
+    color: var(--black);
+    border-radius: 16px;
+  }
+  .thesis-wedge-label {
+    font-size: 0.875rem;
+    letter-spacing: -0.01em;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  .thesis-wedge p {
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 500;
+  }
+
+  /* ── SIDE PROJECTS ── */
+  .side-projects {
+    padding: 8rem 3rem;
+    background: var(--white);
+  }
+
+  .side-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .side-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .side-card {
+    background: var(--off-white);
+    padding: 2.5rem;
+    border-radius: 20px;
+    border: 1px solid var(--light-border);
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .side-card:hover {
+    background: var(--white);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--black);
+  }
+
+  .side-card-image {
+    width: 100%;
+    height: 320px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .side-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .side-card-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+
+  .side-card-desc {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--gray);
+    margin-bottom: 2rem;
+  }
+
+  .side-card-why {
+    font-size: 0.75rem;
+    letter-spacing: -0.01em;
+    color: var(--lime-text);
+    background: rgba(191, 255, 0, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
+    align-self: flex-start;
+    width: fit-content;
+  }
+
+  .side-card-status {
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--black);
+    background: var(--lime);
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-top: auto;
+  }
+
+  .side-card-status:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .side-card-status:disabled {
+    background: var(--light-gray);
+    color: var(--gray);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .side-card-status:disabled:hover {
+    opacity: 0.6;
+    transform: none;
+  }
+
+  .side-card.clickable {
+    cursor: pointer;
+  }
+
+  /* Modal styles */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    height: 90vh;
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    z-index: 10;
+    transition: all 0.2s ease;
+  }
+
+  .modal-close:hover {
+    background: var(--lime);
+    color: var(--black);
+    transform: rotate(90deg);
+  }
+
+  .modal-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  /* ── CONTACT ── */
+  .contact {
+    padding: 8rem 3rem;
+    background: var(--off-white);
+  }
+
+  .contact-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+
+  .contact-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-headline {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .contact-headline em {
+    font-style: italic;
+    color: var(--lime-text);
+  }
+
+  .contact-body {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--gray);
+    max-width: 40ch;
+    margin-bottom: 2rem;
+  }
+
+  .contact-left .contact-cta {
+    width: fit-content;
+  }
+
+  .contact-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .contact-detail {
+    padding: 1.5rem;
+    background: var(--white);
+    border: 1px solid var(--light-border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+  }
+  .contact-detail:hover {
+    border-color: var(--black);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .contact-detail-label {
+    font-size: 0.75rem;
+    letter-spacing: -0.01em;
+    color: var(--gray);
+    font-weight: 500;
+  }
+
+  .contact-detail-val {
+    font-size: 1rem;
+    color: var(--black);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .contact-cta {
+    margin-top: 1rem;
+    padding: 1rem 2.5rem;
+    background: rgba(191, 255, 0, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: var(--black);
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: -0.01em;
+    border-radius: 50px;
+    cursor: none;
+    transition: all 0.2s ease;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(191, 255, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+  .contact-cta:hover {
+    background: rgba(159, 221, 0, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(191, 255, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem;
+    background: var(--white);
+    border-top: 1px solid var(--light-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  footer p {
+    font-size: 0.75rem;
+    letter-spacing: -0.01em;
+    color: var(--gray);
+  }
+
+  /* Link styling */
+  a.text-link {
+    color: var(--blue-link);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  a.text-link:hover { opacity: 0.7; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.25rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 6rem 1.5rem 3rem; }
+    .about-container { padding: 0 1rem; }
+    .about-traits { gap: 1.25rem; }
+    .about-left { position: static; }
+    .projects { padding: 4rem 1.5rem; }
+    .thesis { padding: 4rem 1.5rem; }
+    .thesis-principles { grid-template-columns: 1fr; }
+    .side-grid { grid-template-columns: 1fr; }
+    .side-projects { padding: 4rem 1.5rem; }
+    .contact-container { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
+
+    /* Carousel mobile adjustments */
+    .carousel-btn {
+      width: 32px;
+      height: 32px;
+    }
+    .carousel-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    .carousel-nav {
+      padding: 0 0.5rem;
+    }
+  }
+</style>
+</head>
+<body id="top">
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Jaxnl Design</div>
+  <ul class="nav-links">
+    <li><a href="#top">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Work</a></li>
+    <li><a href="#ideas">Ideas</a></li>
+    <li><a href="#contact">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Designer · Builder · Maker</p>
+
+  <h1 class="hero-headline">
+    I turn messy problems into things people <em>trust</em>
+  </h1>
+
+  <p class="hero-descriptor">
+    I built foundation for early-stage products that translated complex systems to simple workflows spanning <span class="highlight">Insights Intelligence</span>, <span class="highlight">Research Platform</span>, and <span class="highlight">Internal Operations</span> in retail.
+  </p>
+
+  <a href="#contact" class="hero-cta">Let's connect</a>
+
+  <div class="hero-pills">
+    <div class="pill">Foundation frameworks & systems</div>
+    <div class="pill">Strategic product thinking</div>
+    <div class="pill">Multi-persona systems</div>
+    <div class="pill">Human-centered AI</div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-container reveal">
+    <p class="section-label">About</p>
+    <h2 class="about-title">A frantic shopper who happens to be a designer too.</h2>
+    <div class="about-traits">
+      <div class="trait"><span>✦</span> Integrity</div>
+      <div class="trait"><span>✦</span> Kindness</div>
+      <div class="trait"><span>✦</span> Clarity</div>
+      <div class="trait"><span>✦</span> Structure</div>
+      <div class="trait"><span>✦</span> Perspective</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="projects">
+  <div class="projects-container">
+    <div class="section-header reveal">
+      <h2 class="section-title">Work Highlight</h2>
+      <span class="section-count">03 Projects</span>
+    </div>
+
+    <div class="project-list">
+
+      <div class="project-card reveal">
+        <div class="project-header">
+          <div class="project-num">01</div>
+          <div class="project-tag">Insights Intelligence</div>
+        </div>
+        <h3 class="project-name">
+          <span>Scintilla 2.0</span>
+          <span class="project-time">2025 - current</span>
+        </h3>
+        <p class="project-desc">
+          Led the redesign of Scintilla 2.0's analytics experience — breaking down data silos to give suppliers and internal merchants faster access to the insights that drive their decisions, through a scalable widget framework that balances consistency, usability, and long-term maintainability.
+        </p>
+
+        <div class="project-themes">
+          <span class="project-theme-tag">Scalable framework & systems</span>
+          <span class="project-theme-tag">Making data actionable</span>
+          <span class="project-theme-tag">Information Architecture</span>
+        </div>
+
+        <div class="project-carousel" data-carousel="scintilla">
+          <div class="carousel-container">
+            <div class="carousel-slides">
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/Scintilla 1.svg" alt="Scintilla 2.0 - Analytics Overview">
+              </div>
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/Scintilla 2.svg" alt="Scintilla 2.0 - Dashboard Details">
+              </div>
+            </div>
+            <div class="carousel-nav">
+              <button class="carousel-btn carousel-prev" aria-label="Previous slide">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <button class="carousel-btn carousel-next" aria-label="Next slide">
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+          <div class="carousel-dots">
+            <span class="carousel-dot active"></span>
+            <span class="carousel-dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal reveal-delay-1">
+        <div class="project-header">
+          <div class="project-num">02</div>
+          <div class="project-tag">Research Platform</div>
+        </div>
+        <h3 class="project-name">
+          <span>In-Home User Test Platform</span>
+          <span class="project-time">2023 - 2024</span>
+        </h3>
+        <p class="project-desc">
+          As design lead, I shaped the end-to-end experience of a product testing platform connecting suppliers, research experts, customers, and Walmart print center. Designed the integrated workflow and core navigation that brought clarity and reduced friction across a complex, multi-personas system.
+        </p>
+
+        <div class="project-themes">
+          <span class="project-theme-tag">Multi-persona journey design</span>
+          <span class="project-theme-tag">End-to-end experience design</span>
+          <span class="project-theme-tag">Logistics & operational complexity</span>
+        </div>
+
+        <div class="project-carousel" data-carousel="ihut">
+          <div class="carousel-container">
+            <div class="carousel-slides">
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/IHUT 1.svg" alt="In-Home User Test Platform - Overview">
+              </div>
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/IHUT 2.svg" alt="In-Home User Test Platform - Test Setup">
+              </div>
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/IHUT 3.svg" alt="In-Home User Test Platform - Expert Review">
+              </div>
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/IHUT 4.svg" alt="In-Home User Test Platform - Customer Survey">
+              </div>
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/IHUT 5.svg" alt="In-Home User Test Platform - Logistics">
+              </div>
+            </div>
+            <div class="carousel-nav">
+              <button class="carousel-btn carousel-prev" aria-label="Previous slide">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <button class="carousel-btn carousel-next" aria-label="Next slide">
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+          <div class="carousel-dots">
+            <span class="carousel-dot active"></span>
+            <span class="carousel-dot"></span>
+            <span class="carousel-dot"></span>
+            <span class="carousel-dot"></span>
+            <span class="carousel-dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal reveal-delay-2">
+        <div class="project-header">
+          <div class="project-num">03</div>
+          <div class="project-tag">Research Platform</div>
+        </div>
+        <h3 class="project-name">
+          <span>Customer Perception Survey Platform</span>
+          <span class="project-time">2021 - 2024</span>
+        </h3>
+        <p class="project-desc">
+          As founding designer, I led the end-to-end design of a supplier-facing insights intelligence platform, which covers survey creation, data collection, results, and internal review workflows. I set up a scalable foundation that enabled faster research and more confident decision-making for suppliers and internal teams.
+        </p>
+
+        <div class="project-themes">
+          <span class="project-theme-tag">End-to-end</span>
+          <span class="project-theme-tag">Information Architecture & Navigation</span>
+        </div>
+
+        <div class="project-stats">
+          <div class="stat">
+            <span class="stat-val">150%</span>
+            <span class="stat-label">YoY Revenue Growth</span>
+          </div>
+          <div class="stat">
+            <span class="stat-val">30%</span>
+            <span class="stat-label">QoQ Adoption Increase</span>
+          </div>
+          <div class="stat">
+            <span class="stat-val">5000+</span>
+            <span class="stat-label">Survey Projects Unlocked</span>
+          </div>
+        </div>
+
+        <div class="project-carousel" data-carousel="cp">
+          <div class="carousel-container">
+            <div class="carousel-slides">
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/CP 1.svg" alt="Customer Perception Platform - Overview">
+              </div>
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/CP 2.svg" alt="Customer Perception Platform - Survey Creation">
+              </div>
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/CP 3.svg" alt="Customer Perception Platform - Results Dashboard">
+              </div>
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/CP 4.svg" alt="Customer Perception Platform - Review Workflow">
+              </div>
+              <div class="carousel-slide">
+                <img src="Portfolio Assets/For selected projects/CP 5.svg" alt="Customer Perception Platform - Analytics">
+              </div>
+            </div>
+            <div class="carousel-nav">
+              <button class="carousel-btn carousel-prev" aria-label="Previous slide">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <button class="carousel-btn carousel-next" aria-label="Next slide">
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+          <div class="carousel-dots">
+            <span class="carousel-dot active"></span>
+            <span class="carousel-dot"></span>
+            <span class="carousel-dot"></span>
+            <span class="carousel-dot"></span>
+            <span class="carousel-dot"></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SIDE PROJECTS -->
+<section class="side-projects" id="ideas">
+  <div class="side-container">
+    <div class="section-header reveal">
+      <h2 class="section-title">Ideas in the Wild</h2>
+    </div>
+
+    <div class="side-grid">
+
+      <div class="side-card reveal clickable" data-modal-url="https://aasuee-maker.github.io/white-elephant/">
+        <div class="side-card-image">
+          <img src="Portfolio Assets/Cover images/Gift cover.png" alt="Capsule Toy Vending Machine">
+        </div>
+        <div class="side-card-why">Gifting · Nostalgic</div>
+        <h3 class="side-card-name">Capsule Toy Vending Machine</h3>
+        <p class="side-card-desc">
+          A playful gift exchange that brings the magic of 90s capsule toy machines to life, where the reveal is half the gift.
+        </p>
+        <button class="side-card-status">Live</button>
+      </div>
+
+      <div class="side-card reveal reveal-delay-1">
+        <div class="side-card-image">
+          <img src="Portfolio Assets/Cover images/Mom's shopping diary cover copy.png" alt="Mom's Shopping Diary">
+        </div>
+        <div class="side-card-why">Shopping Assistant · Milestone Based</div>
+        <h3 class="side-card-name">Mom's Shopping Diary</h3>
+        <p class="side-card-desc">
+          A shopping tool for parents navigating the endless shifting needs of a growing child, tracking what's needed, what's running out, and what worked, so the next decision is a little easier.
+        </p>
+        <button class="side-card-status" disabled>Under Maintenance</button>
+      </div>
+
+      <div class="side-card reveal reveal-delay-2">
+        <div class="side-card-image">
+          <img src="Portfolio Assets/Cover images/Remember Bruce cover.png" alt="Remember Bruce">
+        </div>
+        <div class="side-card-why">Grief · Healing</div>
+        <h3 class="side-card-name">Remember Bruce</h3>
+        <p class="side-card-desc">
+          A conversational experience that keeps the bond alive after losing a dog, a personalized space where it still feels like they're here, waiting to hear from you.
+        </p>
+        <button class="side-card-status" disabled>WIP</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-container">
+    <div class="contact-left reveal">
+      <h2 class="contact-headline">I want to build something shoppers can truly <em>trust</em></h2>
+      <p class="contact-body">
+        What excites me most is the chance to work with people who care enough to get it right — and build something that genuinely delights shoppers at Walmart's scale. That's exactly the kind of work I want to be part of.
+      </p>
+      <button class="contact-cta">Let's connect →</button>
+    </div>
+
+    <div class="contact-right reveal reveal-delay-1">
+      <div class="contact-detail">
+        <div class="contact-detail-label">Interested in</div>
+        <div class="contact-detail-val">AI Shopping · Sparky Experience Team</div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-label">Strengths</div>
+        <div class="contact-detail-val">System Thinking · Retail Analytics · Shopper Instincts</div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-label">Skills</div>
+        <div class="contact-detail-val">Design · Strategy · Framework · Systems · Research</div>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-label">Tools</div>
+        <div class="contact-detail-val">Cursor · Claude · Gemini · ChatGPT · Figma</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Built with intent, not templates.</p>
+  <p>Craft · Strategy · Vision</p>
+</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" id="projectModal">
+  <div class="modal-content">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <iframe class="modal-iframe" id="modalIframe" src="" title="Project Preview"></iframe>
+  </div>
+</div>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .project-card, .side-card, .principle, .trait, .carousel-btn, .carousel-dot').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelector(this.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  });
+
+  // Hide/show nav on scroll
+  let lastScrollTop = 0;
+  const nav = document.querySelector('nav');
+  const scrollThreshold = 100;
+
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    if (scrollTop > scrollThreshold) {
+      if (scrollTop > lastScrollTop) {
+        // Scrolling down
+        nav.classList.add('nav-hidden');
+      } else {
+        // Scrolling up
+        nav.classList.remove('nav-hidden');
+      }
+    } else {
+      // At top of page
+      nav.classList.remove('nav-hidden');
+    }
+
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+  });
+
+  // Carousel functionality
+  document.querySelectorAll('.project-carousel').forEach(carousel => {
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const dots = carousel.querySelectorAll('.carousel-dot');
+    const prevBtn = carousel.querySelector('.carousel-prev');
+    const nextBtn = carousel.querySelector('.carousel-next');
+
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+    let autoPlayInterval;
+
+    function updateCarousel() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('active', index === currentSlide);
+      });
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      updateCarousel();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+      updateCarousel();
+    }
+
+    function startAutoPlay() {
+      autoPlayInterval = setInterval(nextSlide, 5000); // 5 seconds
+    }
+
+    function resetAutoPlay() {
+      clearInterval(autoPlayInterval);
+      startAutoPlay();
+    }
+
+    // Initialize first slide
+    updateCarousel();
+    startAutoPlay();
+
+    nextBtn?.addEventListener('click', () => {
+      nextSlide();
+      resetAutoPlay();
+    });
+
+    prevBtn?.addEventListener('click', () => {
+      prevSlide();
+      resetAutoPlay();
+    });
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentSlide = index;
+        updateCarousel();
+        resetAutoPlay();
+      });
+    });
+
+    // Touch/swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    carousel.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    carousel.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      if (touchEndX < touchStartX - swipeThreshold) {
+        nextSlide();
+        resetAutoPlay();
+      }
+      if (touchEndX > touchStartX + swipeThreshold) {
+        prevSlide();
+        resetAutoPlay();
+      }
+    }
+  });
+
+  // Modal functionality
+  const modal = document.getElementById('projectModal');
+  const modalIframe = document.getElementById('modalIframe');
+  const modalClose = document.getElementById('modalClose');
+
+  // Open modal when clickable card is clicked
+  document.querySelectorAll('.side-card.clickable').forEach(card => {
+    card.addEventListener('click', () => {
+      const url = card.getAttribute('data-modal-url');
+      if (url) {
+        modalIframe.src = url;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      }
+    });
+  });
+
+  // Close modal
+  function closeModal() {
+    modal.classList.remove('active');
+    modalIframe.src = ''; // Clear iframe
+    document.body.style.overflow = ''; // Restore scrolling
+  }
+
+  modalClose.addEventListener('click', closeModal);
+
+  // Close modal when clicking outside the content
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+
+  // Close modal with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      closeModal();
+    }
+  });
+</script>
+
+</body>
+</html>
